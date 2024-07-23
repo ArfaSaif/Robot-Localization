@@ -296,8 +296,6 @@ class ExactInference(InferenceModule):
         current position. However, this is not a problem, as Pacman's current
         position is known.
         """
-        "*** YOUR CODE HERE ***"
-        # raiseNotDefined()
 
         pacmanPosition = gameState.getPacmanPosition()
         jailPosition = self.getJailPosition()
@@ -316,8 +314,6 @@ class ExactInference(InferenceModule):
         Pacman's current position. However, this is not a problem, as Pacman's
         current position is known.
         """
-        "*** YOUR CODE HERE ***"
-        # raiseNotDefined()
         newDistribution = DiscreteDistribution()
         for oldPos in self.allPositions:
             newPosDist = self.getPositionDistribution(gameState, oldPos)
@@ -328,11 +324,6 @@ class ExactInference(InferenceModule):
                 newDistribution[x] += Pr_X_t_1_given_e_t_1 * newPosDist[x]
         newDistribution.normalize()
         self.beliefs = newDistribution
-        # newDistribution.normalize()
-
-
-
-
 
 
     def getBeliefDistribution(self):
@@ -382,7 +373,6 @@ class ParticleFilter(InferenceModule):
         be reinitialized by calling initializeUniformly. The total method of
         the DiscreteDistribution may be useful.
         """
-        "*** YOUR CODE HERE ***"
         distribution = DiscreteDistribution()
         pacmanPos = gameState.getPacmanPosition()
         jailPos = self.getJailPosition()
@@ -395,7 +385,7 @@ class ParticleFilter(InferenceModule):
 
         distribution.normalize()
         if distribution.total() == 0:
-            # print("reinitializing")
+
             self.initializeUniformly(gameState)
             return
 
@@ -403,7 +393,7 @@ class ParticleFilter(InferenceModule):
             particles[i] = distribution.sample()
         self.particles  = particles
         self.beliefs = distribution
-        # self.beliefs.normalize()
+
 
     def elapseTime(self, gameState):
         """
@@ -416,7 +406,6 @@ class ParticleFilter(InferenceModule):
         for oldPos in self.particles:
             # can make more efficient
             newPosDist = self.getPositionDistribution(gameState, oldPos)
-            # p =  newPosDist.keys()
             newParticles.append(newPosDist.sample())
 
         self.particles  = newParticles
@@ -465,8 +454,7 @@ class JointParticleFilter(ParticleFilter):
         uniform prior.
         """
         self.particles = []
-        "*** YOUR CODE HERE ***"
-        # raiseNotDefined()
+
         legalPos = self.legalPositions
         numGhosts = self.numGhosts
         numParticles = self.numParticles
@@ -515,11 +503,9 @@ class JointParticleFilter(ParticleFilter):
                noisyDistance observation
 
         """
-        "*** YOUR CODE HERE ***"
 
         distribution = DiscreteDistribution()
         pacmanPos = gameState.getPacmanPosition()
-        # jailPos = self.getJailPosition()
         numberParticles = self.numParticles
         particles = self.particles
         numGhost = self.numGhosts
@@ -551,7 +537,6 @@ class JointParticleFilter(ParticleFilter):
             particles[i] = distribution.sample()
 
         self.particles  = particles
-        # self.beliefs = distribution
 
 
     def elapseTime(self, gameState):
@@ -563,19 +548,15 @@ class JointParticleFilter(ParticleFilter):
         for oldParticle in self.particles:
             newParticle = list(oldParticle)  # A list of ghost positions
 
-            # now loop through and update each entry in newParticle...
-            "*** YOUR CODE HERE ***"
-            l = []
-            i = 0
-            for ghos in range(self.numGhosts):
-                newPosDist = self.getPositionDistribution(gameState, newParticle, ghos, self.ghostAgents[ghos])
-            # p =  newPosDist.keys()
+            temp_new_particle = []
+
+            for ghost in range(self.numGhosts):
+                newPosDist = self.getPositionDistribution(gameState, newParticle, ghost, self.ghostAgents[ghost])
+
                 sampleParticle = newPosDist.sample()
-                l.append(sampleParticle)
+                temp_new_particle.append(sampleParticle)
 
-            newParticle = l
-
-            """*** END YOUR CODE HERE ***"""
+            newParticle = temp_new_particle
             newParticles.append(tuple(newParticle))
         self.particles = newParticles
 
